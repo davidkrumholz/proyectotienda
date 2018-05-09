@@ -55,7 +55,7 @@ require "php/sesion.php";
 		</div>
 		<div class="col-sm-8 text-center">
 			<div class="well" id="contenedor">
-				<h2>Gracias por su compra</h2>
+				<h2>Gracias por su compraaaaa</h2>
 				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ut massa eget odio porttitor rutrum. Aliquam vulputate lacus sem, non congue mauris venenatis id. Praesent elementum in purus ut dictum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed nec sodales ligula. Duis lobortis hendrerit enim, condimentum accumsan purus pellentesque ac. Phasellus neque nisl, scelerisque vel leo ac, condimentum sodales mauris.</p>
 				<a href="index.php" class="btn btn-success" role="button">Regresar</a>
 				
