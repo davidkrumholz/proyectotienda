@@ -1,0 +1,37 @@
+.navbar{
+	margin-bottom: 0;
+	border-radius: 0;
+}
+.jumbotron{
+	background-image: url(../img/fondo-banner.jpg);
+	color: white;
+}
+footer{
+	background-color: black;
+	padding: 25px;
+	color: white;
+}
+.row.content{
+	height: auto;
+}
+footer > a{
+	color: white;
+}
+.sidenav{
+	padding-top: 20px;
+	background-color: #f1f1f1;
+	height: auto;
+}
+#contenedor{padding: 5px 25px; margin-top: 25px;}
+.izq{
+	float: left;
+	margin-right: 10px;
+}
+th{ 
+	background: gray; 
+	color:white;
+}
+td{
+	vertical-align: top;
+	padding-top: 10px;
+}
