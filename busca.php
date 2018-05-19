@@ -2,50 +2,20 @@
 require "php/sesion.php";
 require "php/conn.php";
 require "php/laterales.php";
-require "php/carrito.php";
-error_reporting(0);
-// la m nos indica que nos va a borrar.
-if (isset($_GET["m"])) {
-	$id = $_GET["id"];
-	// delete
-	$sql = "DELETE FROM carrito WHERE idProducto=".$id." AND num='".$carrito."'";
-	if(!mysqli_query($conn, $sql)) print "error al borrar registro";
-
-
-} else if (isset($_GET["id"])) {
-	$id = $_GET["id"];
-	$sql = "SELECT * FROM productos WHERE id_producto=".$id;
-	$r = mysqli_query($conn, $sql);
-	$data = mysqli_fetch_assoc($r);
-	//
-	if (isset($_SESSION['carrito'])) {
-		$carrito = $_SESSION['carrito'];
-	}else {
-		$carrito = llaveCarrito(30);
-		$_SESSION['carrito']=$carrito;
-	}
-
-	print $carrito;
-
-	agregaProducto($carrito, $id, $data["precio"], $data["descuento"], $data["envio"], $conn);
-	
+if (isset($_GET["buscar"])) {
+    $buscar = $_GET["buscar"];
+    $sql = "SELECT * FROM productos WHERE nombre LIKE '%".$buscar."%'";
+    $r = mysqli_query($conn, $sql);
+    $productos = array();
+    while ($data = mysqli_fetch_assoc($r)) {
+        array_push($productos, $data);
+    }
 }
-if(isset($_POST["num"])) {
-	$num = $_POST["num"];
-	for ($i=0; $i < $num; $i++) { 
-		$producto = $_POST["i".$i];
-		print $producto;
-		$cantidad = $_POST["c".$i];
-		print $cantidad;
-		actualizaProducto($carrito, $producto, $cantidad, $conn);
-		}
-	}
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Carrito de compras</title>
+	<title>Buscar</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -84,20 +54,29 @@ if(isset($_POST["num"])) {
 	<div class="row content">
 		<div class="col-sm-2 sidenav">
 			<h4>Productos más venidos</h4>
-			<?php masVendidos($conn); ?>
+				<?php masVendidos($conn); ?>
 		</div>
 		<div class="col-sm-8 text-left">
 			<div class="well" id="contenedor">
-				<ol class="breadcrumb">
-					<li><a href="index.php">Inicio</a></li>
-					<li class="active">Carrito</li>
-				</ol>
-				<?php despliegaCarritoCompelto($carrito, false, $conn); ?>
+				<h2 class="text-center">Resultados busqueda: <?php print $buscar; ?></h2>
+                <?php
+                    for ($i=0; $i < count($productos); $i++) { 
+                        print '<div class"media">';
+                        print '<div class="media-left">';
+                        print '<img src="img/'.$productos[$i]["imagen"].'" class="media-object"/>';
+                        print '</div>';
+                        print '<div class="media-body">';
+                        print '<h4 class="media-heading"><a href="producto.php?id='.$productos[$i]["id_producto"].'">'.$productos[$i]["nombre"].'</a></h4>';
+                        print '<p>'.$productos[$i]["descripcion"].'</p>';
+                        print '</div>';
+                        print '</div>';
+                    }
+                ?>
 			</div>
 		</div>
 		<div class="col-sm-2 sidenav">
 		<h4>Productos nuevos</h4>
-			<?php nuevos($conn); ?>
+		<?php nuevos($conn); ?>
 		</div>
 	</div>
 </div>

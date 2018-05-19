@@ -1,5 +1,22 @@
 <?php
 require "php/sesion.php";
+require "php/conn.php";
+require "php/laterales.php";
+if(!isset($_SESSION["usuario"])) {
+	header("location:login.php");
+	exit;
+}
+//variables de trabajo
+$nombre = $_SESSION["usuario"]["nombre"];
+$apellidoPaterno = $_SESSION["usuario"]["apellidoPaterno"];
+$apellidoMaterno = $_SESSION["usuario"]["apellidoMaterno"];
+$correo = $_SESSION["usuario"]["email"];
+$direccion = $_SESSION["usuario"]["direccion"];
+$ciudad = $_SESSION["usuario"]["ciudad"];
+$colonia = $_SESSION["usuario"]["colonia"];
+$estado = $_SESSION["usuario"]["estado"];
+$cospos = $_SESSION["usuario"]["codpos"];
+$pais = $_SESSION["usuario"]["pais"];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,15 +60,7 @@ require "php/sesion.php";
 	<div class="row content">
 		<div class="col-sm-2 sidenav">
 			<h4>Productos más venidos</h4>
-			<div class="well">iOS SDK
-				<a href="producto.php"><img src="img/iossdk.jpg" class="media-object img-resposvive" width="100%"></a>
-			</div>
-			<div class="well">Keynote
-				<a href="producto.php"><img src="img/keynote.jpg" class="media-object img-resposvive" width="100%"></a>
-			</div>
-			<div class="well">Objective C
-				<a href="producto.php"><img src="img/objectivec.jpg" class="media-object img-resposvive" width="100%"></a>
-			</div>
+			<?php masVendidos($conn); ?>
 		</div>
 		<div class="col-sm-8 text-left">
 			<div class="well" id="contenedor">
@@ -63,55 +72,55 @@ require "php/sesion.php";
 				</ol>
 				<h2 class="text-center">Datos de envío</h2>
 				<p>Favor de verificar los siguientes datos para su envío:</p>
-				<form action="pago.php">
+				<form action="direccion.php">
 					<div class="form-group text-left">
 						<label for="nombre">* Nombre:</label>
-						<input type="text" name="nombre" id="nombre" class="form-control" required placeholder="Escriba su nombre"/>
+						<input type="text" name="nombre" id="nombre" class="form-control" required placeholder="Escriba su nombre" value="<?php print $nombre; ?>"/>
 					</div>
 
 					<div class="form-group text-left">
 						<label for="apellidoPaterno">* Apellido Paterno:</label>
-						<input type="text" name="apellidoPaterno" id="apellidoPaterno" class="form-control" required placeholder="Escriba su apellido paterno"/>
+						<input type="text" name="apellidoPaterno" id="apellidoPaterno" class="form-control" required placeholder="Escriba su apellido paterno" value="<?php print $apellidoPaterno; ?>"/>
 					</div>
 
 					<div class="form-group text-left">
 						<label for="apellidoMaterno">Apellido Materno:</label>
-						<input type="text" name="apellidoMaterno" id="apellidoMaterno" class="form-control" placeholder="Escriba su apellido materno"/>
+						<input type="text" name="apellidoMaterno" id="apellidoMaterno" class="form-control" placeholder="Escriba su apellido materno" value="<?php print $apellidoMaterno; ?>"/>
 					</div>
 
 					<div class="form-group text-left">
 						<label for="correo">* Correo electrónico:</label>
-						<input type="email" name="correo" id="correo" class="form-control" placeholder="Escriba su correo electrónico"/>
+						<input type="email" name="correo" id="correo" class="form-control" placeholder="Escriba su correo electrónico" value="<?php print $correo; ?>"/>
 					</div>
 
 					<div class="form-group text-left">
 						<label for="direccion">* Dirección:</label>
-						<input type="text" name="direccion" id="direccion" class="form-control" placeholder="Escriba su dirección"/>
+						<input type="text" name="direccion" id="direccion" class="form-control" placeholder="Escriba su dirección" value="<?php print $direccion; ?>"/>
 					</div>
 
 					<div class="form-group text-left">
 						<label for="ciudad">* Ciudad:</label>
-						<input type="text" name="ciudad" id="ciudad" class="form-control" placeholder="Escriba su ciudad"/>
+						<input type="text" name="ciudad" id="ciudad" class="form-control" placeholder="Escriba su ciudad" value="<?php print $ciudad; ?>"/>
 					</div>
 
 					<div class="form-group text-left">
 						<label for="colonia">* Colonia:</label>
-						<input type="text" name="colonia" id="colonia" class="form-control" placeholder="Escriba su colonia"/>
+						<input type="text" name="colonia" id="colonia" class="form-control" placeholder="Escriba su colonia" value="<?php print $colonia; ?>"/>
 					</div>
 
 					<div class="form-group text-left">
 						<label for="estado">* Estado:</label>
-						<input type="text" name="estado" id="estado" class="form-control" placeholder="Escriba su estado"/>
+						<input type="text" name="estado" id="estado" class="form-control" placeholder="Escriba su estado" value="<?php print $estado; ?>"/>
 					</div>
 
 					<div class="form-group text-left">
 						<label for="codpos">* Código Postal:</label>
-						<input type="text" name="codpos" id="codpos" class="form-control" placeholder="Escriba su código postal"/>
+						<input type="text" name="codpos" id="codpos" class="form-control" placeholder="Escriba su código postal" value="<?php print $cospos; ?>"/>
 					</div>
 
 					<div class="form-group text-left">
 						<label for="pais">* País:</label>
-						<input type="text" name="pais" id="pais" class="form-control" placeholder="Escriba su país"/>
+						<input type="text" name="pais" id="pais" class="form-control" placeholder="Escriba su país" value="<?php print $pais; ?>"/>
 					</div>
 
 					<div class="form-group text-left">
@@ -123,16 +132,8 @@ require "php/sesion.php";
 			</div>
 		</div>
 		<div class="col-sm-2 sidenav">
-		<h4>Productos relacionados</h4>
-		<div class="well">AngularJS
-			<a href="producto.php"><img src="img/angularjs.jpg" class="media-object img-resposvive" width="100%"></a>
-		</div>
-		<div class="well">IndexedDB
-			<a href="producto.php"><img src="img/indexeddb.jpg" class="media-object img-resposvive" width="100%"></a>
-		</div>
-		<div class="well">JavaScript DOM
-			<a href="producto.php"><img src="img/javascriptdom.jpg" class="media-object img-resposvive" width="100%"></a>
-		</div>
+		<h4>Productos nuevos</h4>
+		<?php nuevos($conn); ?>
 		</div>
 	</div>
 </div>

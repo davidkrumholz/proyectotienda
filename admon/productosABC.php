@@ -12,6 +12,23 @@ if (isset($_GET["m"])) {
 	$m = "S";
 }
 
+if ($m=="B") {
+	$id =$_GET["id"];
+	//recuperamos el nombre de la imagen
+	$sql = "SELECT imagen FROM productos WHERE id=".$id;
+	$r = mysqli_query($onn, $sql);
+	$row = mysqli_fetch_assoc($r);
+	$imagen = $row["imagen"];
+	unlink("../img/".$imagen);
+	//borramos el registro
+	$sql = "DELETE FROM productos WHERE id_producto=".$id;
+	if(mysqli_query($conn, $sql)) {
+		header("location:productosABC.php");
+	}else {
+		$errores = array("Error al borrar el registro");
+	}
+}
+
 //se checa la informacion
 error_reporting(0);
 $errores =array();
@@ -105,11 +122,10 @@ if(isset($_POST["nombre"])) {
 			$sql .= "fabricante = '".$fabricante."', ";
 			$sql .= "origen = '".$origen."' ";
 			$sql .= "WHERE id_producto = ".$id;
-			print $sql;
+			//print $sql;
 		}
 //
 if(mysqli_query($conn, $sql)) {
-	print "El registro se inserto correctamente";
 } else {
 	print "Error al insertar registro";
 }
@@ -119,7 +135,7 @@ if(mysqli_query($conn, $sql)) {
 //tipo 0 cursos
 //tipo 1 libros
 if ($m=="S") {
-	$sql = "SELECT * FROM productos WHERE tipo = '0'";
+	$sql = "SELECT * FROM productos";
 	$r = mysqli_query($conn, $sql);
 	$productos = array();
 while ($row = mysqli_fetch_assoc($r)) {
@@ -170,17 +186,24 @@ if ($m=="C") {
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script>
 			window.onload = function() {
-    	document.getElementById("regresar").onclick = function() {
-        	window.open("productosABC.php","_self");
-		}
 		<?php if($m=="C") { ?>
         document.getElementById("borrar").onclick = function() {
             if (confirm("Desea borrar el producto?\nUna vez borrado el registro No podra ser recuperado.")) {
 				var id = <?php print $id; ?>;
 				window.open("productosABC.php?m=B&id="+id,"_self");
-			}
+				}
 			}
 		<?php } ?>
+
+		<?php if($m=="S") { ?>
+        document.getElementById("alta").onclick = function() {
+				window.open("productosABC.php?m=A","_self");
+			}
+		<?php } else { ?>
+			document.getElementById("regresar").onclick = function() {
+        	window.open("productosABC.php","_self");
+		}
+	<?php } ?>
 		}
 	</script>
 </head>
@@ -193,15 +216,11 @@ if ($m=="C") {
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a href="index.php" class="navbar-brand">Mi sitio</a>
+			<a href="productosABC.php" class="navbar-brand">Administracion</a>
 		</div>
 		<div class="collapse navbar-collapse" id="menu">
 			<ul class="nav navbar-nav">
-				<li><a href="index.php">Inicio</a></li>
-				<li><a href="cursos.php">Cursos</a></li>
-				<li><a href="libros.php">Libros</a></li>
-				<li><a href="sobremi.php">Sobre mi</a></li>
-				<li class="active"><a href="contacto.php">Contacto</a></li>
+				<li  class="active"><a href="productosABC.php">Productos</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 			</ul>
@@ -212,6 +231,10 @@ if ($m=="C") {
 <div class="container-fluid text-center">
 	<div class="row content">
 		<div class="col-sm-2 sidenav">
+		<?php if ($m=="S") { ?>
+		<label for="alta"></label>
+		<input type="button" name="alta" value="Dar de alta un producto" class="btn btn-info" role="button" id="alta">
+		<?php } ?>
 		</div>
 		<div class="col-sm-8 text-left">
 			<div class="well" id="contenedor">
@@ -240,7 +263,7 @@ if ($m=="C") {
 					</div>
 
 					<div class="form-group text-left">
-						<label for="apellidoMaterno">*Precio:</label>
+						<label for="precio">*Precio:</label>
 						<input type="text" name="precio" id="precio" class="form-control" placeholder="precio del producto" pattern="^(\d|-)?(\d|,)*\.?\d*$" value="<?php print $precio; ?> "/>
 					</div>
 

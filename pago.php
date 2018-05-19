@@ -1,5 +1,7 @@
 <?php
 require "php/sesion.php";
+require "php/conn.php";
+require "php/laterales.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,15 +45,7 @@ require "php/sesion.php";
 	<div class="row content">
 		<div class="col-sm-2 sidenav">
 			<h4>Productos más venidos</h4>
-			<div class="well">iOS SDK
-				<a href="producto.php"><img src="img/iossdk.jpg" class="media-object img-resposvive" width="100%"></a>
-			</div>
-			<div class="well">Keynote
-				<a href="producto.php"><img src="img/keynote.jpg" class="media-object img-resposvive" width="100%"></a>
-			</div>
-			<div class="well">Objective C
-				<a href="producto.php"><img src="img/objectivec.jpg" class="media-object img-resposvive" width="100%"></a>
-			</div>
+			<?php masVendidos($conn); ?>
 		</div>
 		<div class="col-sm-8 text-left">
 			<div class="well" id="contenedor">
@@ -91,16 +85,8 @@ require "php/sesion.php";
 			</div>
 		</div>
 		<div class="col-sm-2 sidenav">
-		<h4>Productos relacionados</h4>
-		<div class="well">AngularJS
-			<a href="producto.php"><img src="img/angularjs.jpg" class="media-object img-resposvive" width="100%"></a>
-		</div>
-		<div class="well">IndexedDB
-			<a href="producto.php"><img src="img/indexeddb.jpg" class="media-object img-resposvive" width="100%"></a>
-		</div>
-		<div class="well">JavaScript DOM
-			<a href="producto.php"><img src="img/javascriptdom.jpg" class="media-object img-resposvive" width="100%"></a>
-		</div>
+		<h4>Productos nuevos</h4>
+			<?php nuevos($conn); ?>
 		</div>
 	</div>
 </div>

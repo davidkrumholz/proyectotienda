@@ -1,5 +1,13 @@
 <?php
 require "php/sesion.php";
+require "php/conn.php";
+//
+$sql = "SELECT * FROM productos ORDER BY masvendido DESC, nombre";
+$r = mysqli_query($conn, $sql);
+$productos = array();
+while ($row = mysqli_fetch_array($r)) {
+	array_push($productos, $row);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,68 +55,31 @@ require "php/sesion.php";
 </div>
 
 <div class="container-fluid bg-3 text-center">
-	<div class="row">
-		<div class="col-sm-3">
-			<p><a href="producto.php">Bootstrap</a></p>
-			<a href="producto.php">
-				<img src="img/bootstrap.jpg" class="img-responsive img-rounded" style="width:100%" alt="Bootstrap">
-			</a>
-		</div>
-		<div class="col-sm-3">
-			<p><a href="producto.php">IndexedDB</a></p>
-			<a href="producto.php">
-				<img src="img/indexeddb.jpg" class="img-responsive img-rounded" style="width:100%" alt="indexedDb">
-			</a>
-		</div>
-		<div class="col-sm-3">
-			<p><a href="producto.php">JavaScript DOM</a></p>
-			<a href="producto.php">
-				<img src="img/javascriptdom.jpg" class="img-responsive img-rounded" style="width:100%" alt="JavaScriptDOM">
-			</a>
-		</div>
-		<div class="col-sm-3">
-			<p><a href="producto.php">Phonegap Avanzado</a></p>
-			<a href="producto.php">
-				<img src="img/phonegapavanzado.jpg" class="img-responsive img-rounded" style="width:100%" alt="Phonegap Avanzado">
-			</a>
-		</div>
-	</div>
+<?php
+	// mostrar la seleccion de la tabla
+	$ren = 0; //control de los productos por renglon
+		for ($i=0; $i < count($productos) ; $i++) {
+			if ($ren==0) {
+				print '<div class="row">';
+				}
+			print '<div class="col-sm-3">';
+			print '<img src="img/'.$productos[$i]["imagen"].'" class="img-responsive img-rounded" alt="'.$productos[$i]["nombre"].'" height= "50" >';
+			print '<p><a href="producto.php?id='.$productos[$i]["id_producto"].'">'.$productos[$i]["nombre"].'</a></p>';
+			print '</div>';
+			$ren++;
+			if ($ren==4) {
+				$ren =0;
+				print "</div>";
+			}
+		}// cerramos ciclo for
+?>
 </div><br>
-
-<div class="container-fluid bg-3 text-center">
-	<div class="row">
-		<div class="col-sm-3">
-			<p><a href="producto.php">AngularJS</a></p>
-			<a href="producto.php">
-				<img src="img/angularjs.jpg" class="img-responsive img-rounded" style="width:100%" alt="AngularJS">
-			</a>
-		</div>
-		<div class="col-sm-3">
-			<p><a href="producto.php">Objective C</a></p>
-			<a href="producto.php">
-				<img src="img/objectivec.jpg" class="img-responsive img-rounded" style="width:100%" alt="Objective C">
-			</a>
-		</div>
-		<div class="col-sm-3">
-			<p><a href="producto.php">Keynote</a></p>
-			<a href="producto.php">
-				<img src="img/keynote.jpg" class="img-responsive img-rounded" style="width:100%" alt="Keynote">
-			</a>
-		</div>
-		<div class="col-sm-3">
-			<p><a href="producto.php">iOS SDK</a></p>
-			<a href="producto.php">
-				<img src="img/iossdk.jpg" class="img-responsive img-rounded" style="width:100%" alt="iOS SDK">
-			</a>
-		</div>
-	</div>
-</div><br><br>
 
 <footer class="container-fluid text-center">
 	<p>Todos los derechos reservados &copy;</p>
-	<form class="form-inline">Buscar:
+	<form action="busca.php" class="form-inline" method="get">Buscar:
 		<input type="text" name="buscar" id="buscar" class="form-control" size="50" placeholder="buscar un producto">
-		<button type="button" class="btn btn-info">ir</button>
+		<button type="submit" class="btn btn-info">ir</button>
 	</form>
 </footer>
 

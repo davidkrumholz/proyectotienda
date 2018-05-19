@@ -87,9 +87,9 @@ require "php/sesion.php";
 
 <footer class="container-fluid text-center">
 	<p>Todos los derechos reservados &copy;</p>
-	<form class="form-inline">Buscar:
+	<<form action="busca.php" class="form-inline" method="get">Buscar:
 		<input type="text" name="buscar" id="buscar" class="form-control" size="50" placeholder="buscar un producto">
-		<button type="button" class="btn btn-info">ir</button>
+		<button type="submit" class="btn btn-info">ir</button>
 	</form>
 </footer>
 
