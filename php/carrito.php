@@ -87,7 +87,8 @@ function despliegaCarritoCompleto($carrito, $verifica, $conn) {
 	$sql .= "c.descuento as descuento, ";
 	$sql .= "p.imagen as imagen, ";
 	$sql .= "p.descripcion as descripcion, ";
-	$sql .= "p.nombre as nombre ";
+	$sql .= "p.nombre as nombre, ";
+	$sql .= "p.cantidad_almacen as almacen ";
 	$sql .= "FROM carrito as c, productos as p ";
 	$sql .= "WHERE num='".$carrito."' AND ";
 	$sql .= "c.idProducto=p.id_producto";
@@ -111,9 +112,11 @@ function despliegaCarritoCompleto($carrito, $verifica, $conn) {
 			while ($data = mysqli_fetch_assoc($r)) {
 				$cantidad = $data['cantidad'];
 				$desc = $data['descripcion'];
+				$almacen = $data['almacen'];
 				$nom = $data['nombre'];
 				$num = $data['producto'];
 				$tot = $data['cantidad'] * $data['precio'];
+				$almacentot = $almacen - $cantidad;
 				print'<tr>';
 				print'<td>';
 				print'<img src="img/' .$data['imagen'].'" width="105" alt="'.$nom.'">';
@@ -133,7 +136,14 @@ function despliegaCarritoCompleto($carrito, $verifica, $conn) {
 				$subtotal += $tot;
 				$descuento += $data["descuento"];
 				$envio += $data["envio"];
-				$i++;
+				$sql1 = "UPDATE productos ";
+				$sql1 .= "SET cantidad_almacen=".$almacentot." ";
+				$sql1 .= "WHERE id_producto = ".$num;
+				if (!mysqli_query($conn, $sql1)) {
+					print "Error al modificar un registro";
+				}else {
+				}
+				//$i++;
 			}
 			$total = $subtotal + $envio - $descuento;
 			print '<input type="hidden" name="num" value="'.$i.'"/>';
