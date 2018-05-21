@@ -45,7 +45,6 @@ function actualizaProducto($carrito, $producto, $cantidad, $conn){
 	if (!mysqli_query($conn, $sql)) {
 		print "Error al modificar un registro";
 	}else {
-		print " se modifico un registro";
 	}
 }
 
@@ -73,7 +72,7 @@ function agregaProducto($carrito, $id, $precio, $descuento, $envio, $conn) {
 	}
 }
 
-function despliegaCarritoCompelto($carrito, $verifica, $conn) {
+function despliegaCarritoCompleto($carrito, $verifica, $conn) {
 	//variables de trabajo
 	$subtotal = 0;
 	$decuento = 0;
@@ -110,6 +109,7 @@ function despliegaCarritoCompelto($carrito, $verifica, $conn) {
 		print'</tr>';
 		$i=0;
 			while ($data = mysqli_fetch_assoc($r)) {
+				$cantidad = $data['cantidad'];
 				$desc = $data['descripcion'];
 				$nom = $data['nombre'];
 				$num = $data['producto'];
@@ -163,10 +163,80 @@ function despliegaCarritoCompelto($carrito, $verifica, $conn) {
 			print'<tr>';
 			print'<td><a href="index.php" class="btn btn-info" role="button">Seguir comprando</a></td>';
 			print'<td><input type="submit" class="btn btn-info" role="button" value ="Recalcular"></td>';
-			print'<td><a href="checkout.php" class="btn btn-success" role="button">Pagar</a></td>';
+
+			if ($verifica) {
+				print'<td><a href="gracias.php" class="btn btn-success" role="button">Pagar</a></td>';
+			}else {
+				print'<td><a href="checkout.php" class="btn btn-success" role="button">Pagar</a></td>';
+			}
 			print'</tr>';
 			print'</table>';
 			print '</form>';
 				
+}
+
+function despliegaCarritoConsulta($carrito, $conn) {
+	$subtotal = 0;
+	$decuento = 0;
+	$envio = 0;
+	$total = 0;
+	// leer los datos del carrito
+	$sql = "SELECT c.idUsuario as usuario, ";
+	$sql .= "c.idProducto as producto, ";
+	$sql .= "c.cantidad as cantidad, ";
+	$sql .= "c.precio as precio, ";
+	$sql .= "c.envio as envio, ";
+	$sql .= "c.descuento as descuento, ";
+	$sql .= "p.imagen as imagen, ";
+	$sql .= "p.descripcion as descripcion, ";
+	$sql .= "p.nombre as nombre ";
+	$sql .= "FROM carrito as c, productos as p ";
+	$sql .= "WHERE num='".$carrito."' AND ";
+	$sql .= "c.idProducto=p.id_producto";
+	
+	$r = mysqli_query($conn, $sql);
+	print '<table class="table table-striped" width="100%">';
+	print '<tr>';
+	print '<th width="12%">Producto</th>';
+	print '<th width="30%">Nombre</th>';
+	print '<th width="1.8%">cantidad</th>';
+	print '<th width="15.12%" class="text-center">Precio</th>';
+	print '<th width="15.12%" class="text-center">Descuento</th>';
+	print '<th width="15.12%" class="text-center">envio</th>';
+	print '<th width="23.12%" class="text-center">subtotal</th>';
+	print '</tr>';
+	while ($data=mysqli_fetch_assoc($r)) {
+		$nom = $data['nombre'];
+		$num = $data['producto'];
+		$tot = $data['cantidad']*$data['precio']-$data['descuento']+$data['envio'];
+		print '<tr>';
+		print '<td>';
+		print '<img src="../img/'.$data['imagen'].'" width="105" alt="'.$nom.'">';
+		print '</td>';
+		print '<td>';
+		print '<p><b>'.$data['nombre'].'</b></p>';
+		print '</td>';
+		print '<td class="text-center">'.$data['cantidad'].'</p></td>';
+		print '<td class="text-right">$'.number_format($data['precio'],2).'</td>';
+		print '<td class="text-right">$'.number_format($data['descuento'],2).'</td>';
+		print '<td class="text-right">$'.number_format($data['envio'],2).'</td>';
+		print '<td class="text-right">$'.number_format($tot,2).'</td>';
+		print '</tr>';
+		$subtotal += $tot;
+		$decuento += $data["descuento"];
+		$envio += $data["envio"];
+		$can += $data["cantidad"];
+	}
+	$total = $subtotal - $descuento + $envio;
+	print '<tr>';
+	print '<td>&nbsp;</td>';
+	print '<td class="text-right">Totales:</td>';
+	print '<td class="text-center">'.$can.'</p></td>';
+	print '<td class="text-right">$'.number_format($subtotal,2).'</td>';
+	print '<td class="text-right">$'.number_format($descuento,2).'</td>';
+	print '<td class="text-right">$'.number_format($envio,2).'</td>';
+	print '<td class="text-right">$'.number_format($total,2).'</td>';
+	print '</tr>';
+	print '</table>';
 }
 ?>

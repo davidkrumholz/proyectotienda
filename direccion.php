@@ -2,14 +2,56 @@
 require "php/sesion.php";
 require "php/conn.php";
 require "php/laterales.php";
+error_reporting(0);
 if(!isset($_SESSION["usuario"])) {
 	header("location:login.php");
 	exit;
 }
+if(isset($_POST["nombre"])) {
+	// recuperamos el identificador desde la sesion
+	$id = $_SESSION["usuario"]["id"];
+	// recuperamos la informacion del usuario
+	$nombre = $_POST["nombre"];
+	$apellidoPaterno =$_POST["apellidoPaterno"];
+	$apellidoMaterno = $_POST["apellidoMaterno"];
+	$fechanac = $_POST["fechanac"];
+	$correo = $_POST["correo"];
+	$direccion = $_POST["direccion"];
+	$ciudad = $_POST["ciudad"];
+	$colonia = $_POST["colonia"];
+	$estado = $_POST["estado"];
+	$codpos = $_POST["codpos"];
+	$pais = $_POST["pais"];
+	//update
+	$sql = "UPDATE usuarios SET ";
+	$sql .= "nombre='".$nombre."', ";
+	$sql .= "apellidoPaterno='".$apellidoPaterno."', ";
+	$sql .= "apellidoMaterno='".$apellidoMaterno."', ";
+	$sql .= "fechanac='".$fechanac."', ";
+	$sql .= "email='".$correo."', ";
+	$sql .= "direccion='".$direccion."', ";
+	$sql .= "ciudad='".$ciudad."', ";
+	$sql .= "colonia='".$colonia."', ";
+	$sql .= "estado='".$estado."', ";
+	$sql .= "codpos='".$codpos."', ";
+	$sql .= "pais='".$pais."' ";
+	$sql .= "WHERE id_usuarios=".$id;
+	//ejecutamos el query
+	if (mysqli_query($conn, $sql)) {
+		print "si se ejecuto el query";
+		$sql = "SELECT * FROM usuarios WHERE id_usuarios=".$id;
+		$r = mysqli_query($conn, $sql);
+		$usuario = mysqli_fetch_assoc($r);
+		$_SESSION["usuario"]=$usuario;
+		header("location:pago.php");
+		exit;
+		}
+	}
 //variables de trabajo
 $nombre = $_SESSION["usuario"]["nombre"];
 $apellidoPaterno = $_SESSION["usuario"]["apellidoPaterno"];
 $apellidoMaterno = $_SESSION["usuario"]["apellidoMaterno"];
+$fechanac = $_SESSION["usuario"]["fechanac"];
 $correo = $_SESSION["usuario"]["email"];
 $direccion = $_SESSION["usuario"]["direccion"];
 $ciudad = $_SESSION["usuario"]["ciudad"];
@@ -43,9 +85,8 @@ $pais = $_SESSION["usuario"]["pais"];
 		<div class="collapse navbar-collapse" id="menu">
 			<ul class="nav navbar-nav">
 				<li><a href="index.php">Inicio</a></li>
-				<li><a href="cursos.php">Cursos</a></li>
-				<li><a href="libros.php">Libros</a></li>
-				<li><a href="computadoras.php">Computadoras</a></li>
+				<li><a href="cursos.php">Celulareas</a></li>
+				<li><a href="libros.php">Computadoras</a></li>
 				<li><a href="sobremi.php">Sobre mi</a></li>
 				<li class="active"><a href="contacto.php">Contacto</a></li>
 			</ul>
@@ -72,7 +113,7 @@ $pais = $_SESSION["usuario"]["pais"];
 				</ol>
 				<h2 class="text-center">Datos de envío</h2>
 				<p>Favor de verificar los siguientes datos para su envío:</p>
-				<form action="direccion.php">
+				<form action="pago.php" method="post">
 					<div class="form-group text-left">
 						<label for="nombre">* Nombre:</label>
 						<input type="text" name="nombre" id="nombre" class="form-control" required placeholder="Escriba su nombre" value="<?php print $nombre; ?>"/>
@@ -86,6 +127,11 @@ $pais = $_SESSION["usuario"]["pais"];
 					<div class="form-group text-left">
 						<label for="apellidoMaterno">Apellido Materno:</label>
 						<input type="text" name="apellidoMaterno" id="apellidoMaterno" class="form-control" placeholder="Escriba su apellido materno" value="<?php print $apellidoMaterno; ?>"/>
+					</div>
+
+					<div class="form-group text-left">
+						<label for="fechanacimiento">Fecha de nacimiento:</label>
+						<input type="date" name="fechanac" id="fechanac" class="form-control" placeholder="" value="<?php print $fechanac; ?>"/>
 					</div>
 
 					<div class="form-group text-left">

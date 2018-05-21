@@ -34,9 +34,7 @@ if(isset($_POST["num"])) {
 	$num = $_POST["num"];
 	for ($i=0; $i < $num; $i++) { 
 		$producto = $_POST["i".$i];
-		print $producto;
 		$cantidad = $_POST["c".$i];
-		print $cantidad;
 		actualizaProducto($carrito, $producto, $cantidad, $conn);
 		}
 	}
@@ -67,9 +65,8 @@ if(isset($_POST["num"])) {
 		<div class="collapse navbar-collapse" id="menu">
 			<ul class="nav navbar-nav">
 				<li><a href="index.php">Inicio</a></li>
-				<li><a href="cursos.php">Cursos</a></li>
-				<li><a href="libros.php">Libros</a></li>
-				<li><a href="computadoras.php">Computadoras</a></li>
+				<li><a href="cursos.php">Celulares</a></li>
+				<li><a href="libros.php">Computadoras</a></li>
 				<li><a href="sobremi.php">Sobre mi</a></li>
 				<li class="active"><a href="contacto.php">Contacto</a></li>
 			</ul>
@@ -92,7 +89,7 @@ if(isset($_POST["num"])) {
 					<li><a href="index.php">Inicio</a></li>
 					<li class="active">Carrito</li>
 				</ol>
-				<?php despliegaCarritoCompelto($carrito, false, $conn); ?>
+				<?php despliegaCarritoCompleto($carrito, false, $conn); ?>
 			</div>
 		</div>
 		<div class="col-sm-2 sidenav">

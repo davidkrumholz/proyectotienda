@@ -59,9 +59,8 @@ if (isset($_POST["email"])) {
 		<div class="collapse navbar-collapse" id="menu">
 			<ul class="nav navbar-nav">
 				<li><a href="index.php">Inicio</a></li>
-				<li><a href="cursos.php">Cursos</a></li>
-				<li><a href="libros.php">Libros</a></li>
-				<li><a href="computadoras.php">Computadoras</a></li>
+				<li><a href="cursos.php">Celulares</a></li>
+				<li><a href="libros.php">Computadoras</a></li>
 				<li><a href="sobremi.php">Sobre mi</a></li>
 				<li class="active"><a href="contacto.php">Contacto</a></li>
 			</ul>

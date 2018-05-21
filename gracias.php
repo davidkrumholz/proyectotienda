@@ -2,6 +2,22 @@
 require "php/sesion.php";
 require "php/conn.php";
 require "php/laterales.php";
+error_reporting(0);
+if (isset($_SESSION["carrito"])) {
+	$carrito = $_SESSION["carrito"];
+}else {
+	header("location:login.php");
+	exit;
+}
+$sql = "UPDATE carrito ";
+$sql .= "SET estado='1', idUsuario=".$_SESSION["usuario"]["id_usuarios"]; 
+$sql .= " WHERE num='".$carrito."'";
+if (mysqli_query($conn, $sql)) {
+	unset($carrito);
+	unset($_SESSION["carrito"]);
+}else {
+	$error = "error al actualizar el carrito";
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,9 +44,8 @@ require "php/laterales.php";
 		<div class="collapse navbar-collapse" id="menu">
 			<ul class="nav navbar-nav">
 				<li><a href="index.php">Inicio</a></li>
-				<li><a href="cursos.php">Cursos</a></li>
-				<li><a href="libros.php">Libros</a></li>
-				<li><a href="computadoras.php">Computadoras</a></li>
+				<li><a href="cursos.php">Celulares</a></li>
+				<li><a href="libros.php">Computadoras</a></li>
 				<li><a href="sobremi.php">Sobre mi</a></li>
 				<li class="active"><a href="contacto.php">Contacto</a></li>
 			</ul>
@@ -49,10 +64,16 @@ require "php/laterales.php";
 		</div>
 		<div class="col-sm-8 text-center">
 			<div class="well" id="contenedor">
-				<h2>Gracias por su compraaaaa</h2>
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ut massa eget odio porttitor rutrum. Aliquam vulputate lacus sem, non congue mauris venenatis id. Praesent elementum in purus ut dictum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed nec sodales ligula. Duis lobortis hendrerit enim, condimentum accumsan purus pellentesque ac. Phasellus neque nisl, scelerisque vel leo ac, condimentum sodales mauris.</p>
-				<a href="index.php" class="btn btn-success" role="button">Regresar</a>
-				
+			<?php if (isset($error)) {
+				print '<div class="alert alert-danger">';
+				print '<strong>'.$error.'</strong>';
+				print '</div';
+			} else {
+				print '<h2>Gracias por su compraaaaa</h2>';
+				print '<p>Le llegara un correo para que guie su compra con la forma de envio.</p>';
+				print '<a href="index.php" class="btn btn-success" role="button">Regresar</a>';
+			}
+			?>
 			</div>
 		</div>
 		<div class="col-sm-2 sidenav">

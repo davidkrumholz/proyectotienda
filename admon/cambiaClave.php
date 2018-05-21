@@ -1,30 +1,20 @@
 <?php
-require "php/conn.php";
-require "php/sesion.php";
 error_reporting(0);
-//
-if (isset($_GET["id"])) {
-    $id = $_GET["id"];
-    //Leer los datos del usuario
-    $sql = "SELECT * FROM usuarios WHERE id=".$id;
-    $r = mysqli_query($conn, $sql);
-    $n = mysqli_num_rows($r);
-    if ($n!=1) {
-        // No existe el usuario
-        header("location:index.php");
-    }
+session_start();
+if (!isset($_SESSION["admon"])) {
+	header("location:index.php");
 }
-if (isset($_POST["id"])) {
-    $id = $_POST["id"];
+require "../php/conn.php";
+
+if (isset($_POST["clave1"])) {
     $clave1 = $_POST["clave1"];
 	$clave2 = $_POST["clave2"];
     //Verificamos las claves
     if ($clave1 == $clave2){
-		print "entre";
 		//$clave = hash_hmac("sha512",$clave1,"mimamamemima");
-		$sql = "UPDATE usuarios SET clave ='".$clave1."' WHERE id=".$id;
+		$sql = "UPDATE admon SET clave ='".$clave1."' WHERE id=1";
 		if (mysqli_query($conn, $sql)) {
-			header("location:cambiaClaveGracias.php");
+			header("location:index.php");
 		}else{
 			$error = "Error al actualizar la clave de acceso";
 		}
@@ -36,13 +26,13 @@ if (isset($_POST["id"])) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Cambia clave</title>
+	<title>Cambia clave administracion</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="css/main.css"/>
+	<link rel="stylesheet" type="text/css" href="../css/main.css"/>
 </head>
 <body>
 <nav class="navbar navbar-inverse">
@@ -57,11 +47,11 @@ if (isset($_POST["id"])) {
 		</div>
 		<div class="collapse navbar-collapse" id="menu">
 			<ul class="nav navbar-nav">
-				<li><a href="index.php">Inicio</a></li>
-				<li><a href="cursos.php">Celulares</a></li>
-				<li><a href="libros.php">Computadoras</a></li>
-				<li><a href="sobremi.php">Sobre mi</a></li>
-				<li class="active"><a href="contacto.php">Contacto</a></li>
+                <li  class=""><a href="productosABC.php">celulares</a></li>
+                <li  class=""><a href="computadorasABC.php">computadoras</a></li>
+				<li  class=""><a href="usuariosABC.php">Usuarios</a></li>
+                <li  class=""><a href="pedidosABC.php">Pedidos</a></li>
+                <li  class="active"><a href="cambiaClave.php">Cambia clave</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 			<?php require "php/navbar.php"; ?>
@@ -73,16 +63,7 @@ if (isset($_POST["id"])) {
 <div class="container-fluid text-center">
 	<div class="row content">
 		<div class="col-sm-2 sidenav">
-			<h4>Productos más venidos</h4>
-			<div class="well">iOS SDK
-				<a href="producto.php"><img src="img/iossdk.jpg" class="media-object img-resposvive" width="100%"></a>
-			</div>
-			<div class="well">Keynote
-				<a href="producto.php"><img src="img/keynote.jpg" class="media-object img-resposvive" width="100%"></a>
-			</div>
-			<div class="well">Objective C
-				<a href="producto.php"><img src="img/objectivec.jpg" class="media-object img-resposvive" width="100%"></a>
-			</div>
+			
 		</div>
 		<div class="col-sm-8 text-left">
 			<div class="well" id="contenedor">
@@ -111,29 +92,18 @@ if (isset($_POST["id"])) {
 						<input type="submit" name="enviar" value="Enviar" class="btn btn-success" role="button"/>
 					</div>
 
-                    <input type="hidden" name = "id" id= "id" value= "<?php print $id; ?>">
 				
                 </form>
 
 			</div>
 		</div>
 		<div class="col-sm-2 sidenav">
-		<h4>Productos relacionados</h4>
-		<div class="well">AngularJS
-			<a href="producto.php"><img src="img/angularjs.jpg" class="media-object img-resposvive" width="100%"></a>
-		</div>
-		<div class="well">IndexedDB
-			<a href="producto.php"><img src="img/indexeddb.jpg" class="media-object img-resposvive" width="100%"></a>
-		</div>
-		<div class="well">JavaScript DOM
-			<a href="producto.php"><img src="img/javascriptdom.jpg" class="media-object img-resposvive" width="100%"></a>
-		</div>
+		
 		</div>
 	</div>
 </div>
 
 <footer class="container-fluid text-center">
-<a href="aviso.php">Aviso de privacidad</a>
 </footer>
 
 </body>

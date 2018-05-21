@@ -2,6 +2,7 @@
 require "php/sesion.php";
 require "php/conn.php";
 require "php/carrito.php";
+require "php/laterales.php";
 error_reporting(0);
 if (isset($_GET["id"])) {
 	$id = $_GET["id"];
@@ -14,7 +15,7 @@ function muestraProductoRelacionado($id, $conn) {
 	$sql = "SELECT nombre,imagen FROM productos WHERE id_producto=".$id;
 	$r = mysqli_query($conn, $sql);
 	$data = mysqli_fetch_assoc($r);
-	//Desplegemaos etiquetas
+	//Desplegamos etiquetas
 	print '<div class="well">'.$data["nombre"];
 	print '<a href="producto.php?id='.$id.'"><img src="img/'.$data["imagen"].'" class="media-object img-resposvive" width="100%"></a>';
 		print '</div>';
@@ -45,9 +46,8 @@ function muestraProductoRelacionado($id, $conn) {
 		<div class="collapse navbar-collapse" id="menu">
 			<ul class="nav navbar-nav">
 				<li><a href="index.php">Inicio</a></li>
-				<li class="active"><a href="cursos.php">Cursos</a></li>
-				<li><a href="libros.php">Libros</a></li>
-				<li><a href="computadoras.php">Computadoras</a></li>
+				<li class="active"><a href="cursos.php">Celulares</a></li>
+				<li><a href="libros.php">Computadoras</a></li>
 				<li><a href="sobremi.php">Sobre mi</a></li>
 				<li><a href="contacto.php">Contacto</a></li>
 			</ul>
@@ -61,7 +61,7 @@ function muestraProductoRelacionado($id, $conn) {
 <div class="container-fluid text-center">
 	<div class="row content">
 		<div class="col-sm-2 sidenav">
-			<img src="img/<?php print $data['imagen']; ?> " class="media-object img-resposvive" heigth="50px" />
+			<img src="img/<?php print $data['imagen']; ?> " class="media-object img-responsive" heigth="50px" />
 			<br>
 			<h4>Núm. producto: <?php print $data['id_producto']; ?></h4>
 			<h4>precio: $<?php print $data['precio']; ?></h4>

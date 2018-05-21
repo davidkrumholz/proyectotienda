@@ -2,6 +2,9 @@
 require "php/sesion.php";
 require "php/conn.php";
 require "php/laterales.php";
+if (!isset($_SESSION["usuario"])) {
+	header("location:login.php");
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,9 +31,8 @@ require "php/laterales.php";
 		<div class="collapse navbar-collapse" id="menu">
 			<ul class="nav navbar-nav">
 				<li><a href="index.php">Inicio</a></li>
-				<li><a href="cursos.php">Cursos</a></li>
-				<li><a href="libros.php">Libros</a></li>
-				<li><a href="computadoras.php">Computadoras</a></li>
+				<li><a href="cursos.php">Celulares</a></li>
+				<li><a href="libros.php">Computadoras</a></li>
 				<li><a href="sobremi.php">Sobre mi</a></li>
 				<li class="active"><a href="contacto.php">Contacto</a></li>
 			</ul>
@@ -57,24 +59,21 @@ require "php/laterales.php";
 				</ol>
 				<h2 class="text-center">Formas de pago</h2>
 				<p>Favor de seleccinar una de las formas de pago:</p>
-				<form action="verifica.php">
+				<form action="verifica.php" method = "post">
 					<div class="radio">
-						<label><input type="radio" name="pago" id="tarjeta1">Tarjeta de crédito 1</label>
+						<label><input type="radio" name="pago" id="tarjeta1" value="bancomer">Tarjeta Bancomer</label>
 					</div>
 					<div class="radio">
-						<label><input type="radio" name="pago" id="tarjeta2">Tarjeta de crédito 2</label>
+						<label><input type="radio" name="pago" id="tarjeta2" value="santander">Tarjeta Santander</label>
 					</div>
 					<div class="radio">
-						<label><input type="radio" name="pago" id="tarjeta3">Tarjeta de débito</label>
+						<label><input type="radio" name="pago" id="tarjeta3" value="banamex">Tarjeta Banamex</label>
 					</div>
 					<div class="radio">
-						<label><input type="radio" name="pago" id="efectivo">Efectivo</label>
+						<label><input type="radio" name="pago" id="efectivo" value="efectivo">Efectivo</label>
 					</div>
 					<div class="radio">
-						<label><input type="radio" name="pago" id="pay Pal">Pay Pal</label>
-					</div>
-					<div class="radio">
-						<label><input type="radio" name="pago" id="bitcoins">Bitcoins</label>
+						<label><input type="radio" name="pago" id="pay Pal" value="paypal">Pay Pal</label>
 					</div>
 					<div class="form-group text-left">
 						<label for="enviar"></label>

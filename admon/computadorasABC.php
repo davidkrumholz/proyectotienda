@@ -2,7 +2,7 @@
 session_start();
 if (!isset($_SESSION["admon"])) {
 	header("location:index.php");
-
+	
 }
 require "../php/conn.php";
 require "../php/funciones.php";
@@ -28,7 +28,7 @@ if ($m=="B") {
 	//borramos el registro
 	$sql = "DELETE FROM productos WHERE id_producto=".$id;
 	if(mysqli_query($conn, $sql)) {
-		header("location:productosABC.php");
+		header("location:computadorasABC.php");
 	}else {
 		$errores = array("Error al borrar el registro");
 	}
@@ -94,7 +94,7 @@ if(isset($_POST["nombre"])) {
         }
 		//
 		if ($id=="") {
-			$sql = "INSERT INTO productos VALUES(0,'0','".$nombre."', ";
+			$sql = "INSERT INTO productos VALUES(0,'1','".$nombre."', ";
 			$sql .= "'".$descripcion."', ";
 			$sql .= "".$precio.", ";
 			$sql .= "".$descuento.", ";
@@ -130,17 +130,16 @@ if(isset($_POST["nombre"])) {
 			//print $sql;
 		}
 //
-if(mysqli_query($conn, $sql)) {
-} else {
-	print "Error al insertar registro";
-}
+if(!mysqli_query($conn, $sql)) {
+    array_push($errores, "Error al insertar una computadora");
+        }
     }
 }
 // lee la tabla de productos
-//tipo 0 cursos
-//tipo 1 libros
+//tipo 0 celulares
+//tipo 1 computadoras
 if ($m=="S") {
-	$sql = "SELECT * FROM productos WHERE tipo='0'";
+	$sql = "SELECT * FROM productos WHERE tipo='1'";
 	$r = mysqli_query($conn, $sql);
 	$productos = array();
 while ($row = mysqli_fetch_assoc($r)) {
@@ -149,7 +148,7 @@ while ($row = mysqli_fetch_assoc($r)) {
 }
 //lee la tabla de productos
 if ($m=="A" || $m=="C") {
-	$sql = "SELECT id_producto,nombre FROM productos WHERE tipo='0' ORDER BY nombre";
+	$sql = "SELECT id_producto,nombre FROM productos WHERE tipo='1'  ORDER BY nombre";
 	$r = mysqli_query($conn, $sql);
 	$productos = array();
 while ($row = mysqli_fetch_assoc($r)) {
@@ -183,7 +182,7 @@ if ($m=="C") {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Celulares ABC</title>
+	<title>Computadoras ABC</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -195,18 +194,18 @@ if ($m=="C") {
         document.getElementById("borrar").onclick = function() {
             if (confirm("Desea borrar el producto?\nUna vez borrado el registro No podra ser recuperado.")) {
 				var id = <?php print $id; ?>;
-				window.open("productosABC.php?m=B&id="+id,"_self");
+				window.open("computadorasABC.php?m=B&id="+id,"_self");
 				}
 			}
 		<?php } ?>
 
 		<?php if($m=="S") { ?>
         document.getElementById("alta").onclick = function() {
-				window.open("productosABC.php?m=A","_self");
+				window.open("computadorasABC.php?m=A","_self");
 			}
 		<?php } else { ?>
 			document.getElementById("regresar").onclick = function() {
-        	window.open("productosABC.php","_self");
+        	window.open("computadorasABC.php","_self");
 		}
 	<?php } ?>
 		}
@@ -225,8 +224,8 @@ if ($m=="C") {
 		</div>
 		<div class="collapse navbar-collapse" id="menu">
 			<ul class="nav navbar-nav">
-				<li  class="active"><a href="productosABC.php">Celulares</a></li>
-				<li  class=""><a href="computadorasABC.php">computadoras</a></li>
+				<li  class=""><a href="productosABC.php">celulares</a></li>
+                <li  class="active"><a href="computadorasABC.php">computadoras</a></li>
 				<li  class=""><a href="usuariosABC.php">Usuarios</a></li>
 				<li  class=""><a href="pedidosABC.php">Pedidos</a></li>
 				<li  class=""><a href="cambiaClave.php">Cambia clave</a></li>
@@ -243,12 +242,12 @@ if ($m=="C") {
 		<div class="col-sm-2 sidenav">
 		<?php if ($m=="S") { ?>
 		<label for="alta"></label>
-		<input type="button" name="alta" value="Dar de alta un celular" class="btn btn-info" role="button" id="alta">
+		<input type="button" name="alta" value="Dar de alta una computadora " class="btn btn-info btn-responsive" role="button" id="alta">
 		<?php } ?>
 		</div>
 		<div class="col-sm-8 text-left">
 			<div class="well" id="contenedor">
-			<h2 class="text-center">ABC productos</h2>
+			<h2 class="text-center">ABC tabla computadoras</h2>
 					<?php
 					if($m=="A" || $m=="C") {
 					if(isset($errores)){
@@ -261,9 +260,9 @@ if ($m=="C") {
 					}
 				}
 					?>
-				<form action="productosABC.php" method="post" enctype="multipart/form-data">
+				<form action="computadorasABC.php" method="post" enctype="multipart/form-data">
 					<div class="form-group text-left">
-						<label for="nombre">* Nombre producto:</label>
+						<label for="nombre">* Nombre computadora:</label>
 						<input type="text" name="nombre" id="nombre" class="form-control" required placeholder="Escriba su nombre" value="<?php print $nombre; ?> "/>
 					</div>
 
@@ -416,7 +415,7 @@ if ($m=="C") {
 						}
 						print '<div class="col-sm-3">';
 						print '<img src="../img/'.$productos[$i]["imagen"].'" class="img-responsive img-rounded" alt="'.$productos[$i]["nombre"].'" style="height: 400;">';
-						print '<p><a href="productosABC.php?m=C&id='.$productos[$i]["id_producto"].'">'.$productos[$i]["nombre"].'</a></p>';
+						print '<p><a href="computadorasABC.php?m=C&id='.$productos[$i]["id_producto"].'">'.$productos[$i]["nombre"].'</a></p>';
 						print '</div>';
 						$ren++;
 						if ($ren==4) {
